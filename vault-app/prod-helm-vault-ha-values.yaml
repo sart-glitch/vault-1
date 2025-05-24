@@ -1,0 +1,27 @@
+global:  enabled: true
+  tlsDisable: true
+ui:
+  enabled: true
+  serviceType: NodePort
+  serviceNodePort: 30802
+server:
+   dataStorage:
+     storageClass: gp2
+   ha:
+     enabled: true
+     replicas: 1
+     raft:
+       enabled: true
+       setNodeId: true
+       config: |
+            ui = true
+            cluster_name = "vault-integrated-storage"
+            storage "raft" {
+               path  = "/vault/data/"
+            }
+
+            listener "tcp" {
+               address = "0.0.0.0:8200"
+               cluster_address = "0.0.0.0:8201"
+               tls_disable = "true"
+            }
